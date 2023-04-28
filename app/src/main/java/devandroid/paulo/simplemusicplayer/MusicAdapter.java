@@ -1,6 +1,8 @@
 package devandroid.paulo.simplemusicplayer;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,15 +37,24 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.file_name.setText((mFiles.get(position).getTitle()));
         byte[] image = getAlbumArt(mFiles.get(position).getPath());
         if (image != null)
         {
             Glide.with(mContext).asBitmap().load(image).into(holder.album_art);
         } else {
-            Glide.with(mContext).load(R.drawable.empty_cd).into(holder.album_art);
+            Glide.with(mContext).load(R.drawable.compact_disc_svgrepo_com).into(holder.album_art);
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(mContext, PlayerActivity.class);
+                intent.putExtra("position", position);
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
